@@ -35,13 +35,13 @@ func AfterProcess(buffer []byte) ([]byte, error) {
 	var script string
 	var link string
 
-	if js, ok := gofis.StaticArr["js"]; ok {
+	if js, ok := StaticArr["js"]; ok {
 		for _, v := range js {
 			script += "<script type=\"text/javascript\" src=\"" + v + "\"></script>\n"
 		}
 	}
 
-	if css, ok := gofis.StaticArr["css"]; ok {
+	if css, ok := StaticArr["css"]; ok {
 		for _, v := range css {
 			link += "<link type=\"text/css\" rel=\"stylesheet\" href=\"" + v + "\" />"
 		}
@@ -62,10 +62,10 @@ func Require(args ...interface{}) string {
 		if strAsync == "true" {
 			async = true
 		}
-		gofis.Load(id, ConfigDir, async)
+		Load(id, ConfigDir, async)
 	} else if len(args) == 1 {
 		id := args[0].(string)
-		gofis.Load(id, ConfigDir, async)
+		Load(id, ConfigDir, async)
 	} else {
 		beego.Error("require id [async]")
 	}
@@ -99,7 +99,7 @@ func Widget(args ...interface{}) template.HTML {
 		s = fmt.Sprint(args...)
 	}
 
-	tplPath := gofis.GetUri(s, ConfigDir)
+	tplPath := GetUri(s, ConfigDir)
 
 	tpl, _ok := beego.BeeTemplates[tplPath]
 	if !_ok {
@@ -108,7 +108,7 @@ func Widget(args ...interface{}) template.HTML {
 	} else {
 		var out bytes.Buffer
 		tpl.Execute(&out, nil)
-		gofis.Load(s, ConfigDir, false)
+		Load(s, ConfigDir, false)
 		return template.HTML(out.String())
 	}
 }
